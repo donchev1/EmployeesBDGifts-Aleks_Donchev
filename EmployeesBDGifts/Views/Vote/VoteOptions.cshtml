@@ -1,0 +1,70 @@
+﻿@model EmployeesBDGifts.ViewModels.VoteOptionsViewModel
+@{
+    ViewData["Title"] = "VoteOptions";
+}
+
+<style>
+    table tr th, td {
+        padding:5px;
+    }
+</style>
+
+<h2>@Model.BDUser.Name (@Model.BDUser.Bday.ToShortDateString())</h2>
+<hr />
+
+<h3>Select the best gift for the year @Model.Year</h3>
+@if (Model.userIsOwner)
+{
+    <div>
+        You Started this vote you can end it whenever you want.
+        <a href="/vote/endVote?voteId=@Model.VoteInfoList[0].Id"  class="btn btn-primary">End vote</a>
+    </div>
+}
+<br />
+    Change year
+    <input id="yearChange" type="number" />
+    <input onclick="ChangeYear()" value="Change Year" class="btn btn-primary"/>
+    <hr />
+Show Vote Info
+<a href="/vote/ShowVoteInfo?userId=@Model.BDUser.Id&year=@Model.Year" class="btn btn-primary">Show</a>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Number of Votes</th>
+        <th>Cast a vote</th>
+    </tr>
+    @foreach (var gift in Model.Gifts)
+    {
+        int voteInfoId = 0;
+        var voteInfo = Model.VoteInfoList.SingleOrDefault(x => x.GiftId == gift.Id);
+        if (voteInfo != null)
+        {
+            voteInfoId = voteInfo.Id;
+        }
+        <tr>
+            <td>
+                @gift.Name
+            </td>
+            <td>
+                @Model.VoteInfoList.SingleOrDefault(x=> x.GiftId == gift.Id)?.Quantity
+            </td>
+            <td>
+                <a href="/vote/castvote?userId=@Model.BDUser.Id&giftId=@gift.Id&year=@Model.Year" class="btn-primary btn">Vote</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+
+
+<script type="text/javascript">
+    function ChangeYear() {
+        var year = $("#yearChange").val();
+        if (year == "" || year <2020 || year >2030) {
+            alert("Please type in a year from 2020 to 2030.")
+        }
+        window.location.href = RootUrl + "/Vote/VoteOptions?userId=" + @Model.BDUser.Id+ "&year=" + year
+    }
+
+</script>

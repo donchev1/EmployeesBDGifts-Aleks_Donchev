@@ -1,0 +1,37 @@
+﻿@model IEnumerable<EmployeesBDGifts.ViewModels.ShowInfoViewModel>
+
+@{
+    var highestVoteCount = Model.Select(x => x.Users.Count()).ToList().Max();
+    var winningGift = Model.FirstOrDefault(x => x.Users.Count() == highestVoteCount).Gift;
+}
+<h2>
+    The winning vote is for gift: @winningGift.Name
+    With @highestVoteCount number of votes
+    <br>
+</h2>
+<style>
+
+</style>
+
+@foreach (var vm in Model)
+{
+    <div class="row" style="margin-top:5px;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <span style="border:2px solid blue; ">
+                @vm.Gift.Name
+            </span>
+            
+        </div>
+    </div>
+    <div class="row" style="margin-bottom:5px; border-bottom:1px solid green">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            @foreach (var user in vm.Users)
+            {
+                <span class="userBox" style="border: 2px solid orange;">
+                    @user.Name
+                </span>
+            }
+        </div>
+    </div>
+
+}
